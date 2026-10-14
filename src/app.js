@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import mongoose from "mongoose";
 
 const app = express();
 
@@ -14,5 +15,14 @@ app.get("/", (req, res)=>{
         message: "AI sales buddy API is running",
     });
 });
+
+app.get("/health/db", (req, res) => {
+    const isConnected = mongoose.connection.readyState === 1;
+  
+    res.status(isConnected ? 200 : 503).json({
+      success: isConnected,
+      database: isConnected ? "connected" : "disconnected",
+    });
+  });
 
 export default app;
