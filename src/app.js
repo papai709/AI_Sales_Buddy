@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
+import errorMiddleware from "./middlewares/error.middleware.js";
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.get("/", (req, res)=>{
     });
 });
 
+// Health check route
 app.get("/health/db", (req, res) => {
     const isConnected = mongoose.connection.readyState === 1;
   
@@ -23,6 +25,14 @@ app.get("/health/db", (req, res) => {
       success: isConnected,
       database: isConnected ? "connected" : "disconnected",
     });
-  });
+});
 
+// route import
+import chatRoutes from "./routes/chat.route.js";
+
+// router declaration
+app.use("/api/chat", chatRoutes);
+
+
+app.use(errorMiddleware);
 export default app;
