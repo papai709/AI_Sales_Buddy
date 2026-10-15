@@ -4,6 +4,7 @@ import buildSalesAgentPrompt from "../prompts/sales-agent.prompt.js";
 import Lead from "../models/lead.model.js";
 import Customer from "../models/customer.model.js";
 import { demoBusiness } from "../data/demo.data.js";
+import sendWhatsAppMessage from "./whatsapp.service.js";
 
 const processCustomerMessage = async (customerId, message) => {
   const customer = await Customer.findById(customerId);
@@ -71,6 +72,11 @@ const processCustomerMessage = async (customerId, message) => {
 
   await lead.save();
 
+  // Simulate sending the AI reply to the customer
+  const whatsappResult = await sendWhatsAppMessage(
+    customer.phone,
+    analysis.reply
+  );
   return {
     customer: customer.name,
     reply: analysis.reply,
@@ -80,6 +86,7 @@ const processCustomerMessage = async (customerId, message) => {
     status: lead.status,
     needsHuman: lead.needsHuman,
     messages: lead.messages,
+    whatsapp: whatsappResult,
   };
 };
 
