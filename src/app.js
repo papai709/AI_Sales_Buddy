@@ -31,11 +31,13 @@ app.get("/health/db", (req, res) => {
 import chatRoutes from "./routes/chat.route.js";
 import businessRoutes from "./routes/business.route.js";
 import campaignRoutes from "./routes/campaign.route.js";
+import conversationRoutes from "./routes/conversation.route.js";
 
 // router declaration
 app.use("/api/chat", chatRoutes);
 app.use("/api/business", businessRoutes);
 app.use("/api/campaigns", campaignRoutes);
+app.use("/api/conversations", conversationRoutes);
 
 app.use(errorMiddleware);
 export default app;
