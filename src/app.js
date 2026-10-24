@@ -7,7 +7,17 @@ const app = express();
 
 //middleware
 app.use(cors());
-app.use(express.json());
+// app.use(express.json());
+
+app.use(
+    express.json({
+      verify: (req, res, buf) => {
+        if (req.originalUrl.startsWith("/webhooks/whatsapp")) {
+          req.rawBody = Buffer.from(buf);
+        }
+      },
+    })
+  );
 
 //rought checking
 app.get("/", (req, res)=>{
