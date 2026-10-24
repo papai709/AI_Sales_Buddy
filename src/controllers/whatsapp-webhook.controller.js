@@ -15,12 +15,30 @@ export const verifyWhatsAppWebhook = (req, res) => {
   return res.sendStatus(403);
 };
 
-export const receiveWhatsAppWebhook = (req, res) => {
-  console.log(
-    "WhatsApp webhook received:",
-    JSON.stringify(req.body, null, 2)
-  );
 
-  // Acknowledge receipt. AI processing will be added later.
-  return res.sendStatus(200);
+export const receiveWhatsAppWebhook = (req, res) => {
+  const entries = req.body?.entry ?? [];
+
+  for (const entry of entries) {
+    for (const change of entry.changes ?? []) {
+      if (change.field !== "messages") continue;
+
+      const value = change.value;
+      const messages = value?.messages ?? [];
+
+      for (const message of messages) {
+        if (message.type !== "text") {
+          console.log("Ignoring non-text WhatsApp message.");
+          continue;
+        }
+
+        console.log("Incoming WhatsApp message:");
+        console.log("Sender:", message.from);
+        console.log("Message:", message.text?.body);
+        console.log("Message ID:", message.id);
+      }
+    }
+  }
+
+  return res.status(200).send("OK");
 };
