@@ -7,7 +7,9 @@ import { demoBusiness } from "../data/demo.data.js";
 import sendWhatsAppMessage from "./whatsapp.service.js";
 
 const processCustomerMessage = async (customerId, message) => {
-  const customer = await Customer.findById(customerId);
+  const customer = String(customerId).startsWith("demo_")
+    ? await Customer.findOne({ phone: customerId })
+    : await Customer.findById(customerId);
 
   if (!customer) {
     throw new Error("Customer not found");
