@@ -1,4 +1,3 @@
-
 import ai from "../config/ai.config.js";
 import buildSalesAgentPrompt from "../prompts/sales-agent.prompt.js";
 import Lead from "../models/lead.model.js";
@@ -7,9 +6,17 @@ import { demoBusiness } from "../data/demo.data.js";
 import sendWhatsAppMessage from "./whatsapp.service.js";
 
 const processCustomerMessage = async (customerId, message) => {
-  const customer = String(customerId).startsWith("demo_")
-    ? await Customer.findOne({ phone: customerId })
-    : await Customer.findById(customerId);
+  const customerKey = String(customerId);
+
+  let customer;
+
+  if (customerKey.startsWith("demo_")) {
+    customer = await Customer.findOne({ phone: customerKey });
+  } else if (/^\d+$/.test(customerKey)) {
+    customer = await Customer.findOne({ phone: customerKey });
+  } else {
+    customer = await Customer.findById(customerKey);
+  }
 
   if (!customer) {
     throw new Error("Customer not found");
@@ -58,8 +65,7 @@ const processCustomerMessage = async (customerId, message) => {
   }
 
   const expectedStatus =
-    analysis.score >= 70 ? "HOT" :
-    analysis.score >= 30 ? "WARM" : "COLD";
+    analysis.score >= 70 ? "HOT" : analysis.score >= 30 ? "WARM" : "COLD";
 
   lead.interest = analysis.interest;
   lead.intent = analysis.intent;
@@ -77,7 +83,7 @@ const processCustomerMessage = async (customerId, message) => {
   // Simulate sending the AI reply to the customer
   const whatsappResult = await sendWhatsAppMessage(
     customer.phone,
-    analysis.reply
+    analysis.reply,
   );
   return {
     customer: customer.name,

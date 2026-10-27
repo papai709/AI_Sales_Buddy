@@ -1,4 +1,5 @@
 
+import processCustomerMessage from "../services/conversation.service.js";
 export const verifyWhatsAppWebhook = (req, res) => {
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
@@ -16,29 +17,43 @@ export const verifyWhatsAppWebhook = (req, res) => {
 };
 
 
-export const receiveWhatsAppWebhook = (req, res) => {
+
+export const receiveWhatsAppWebhook = async (req, res) => {
+  // Acknowledge the webhook before processing.
+  res.status(200).send("OK");
+
   const entries = req.body?.entry ?? [];
 
   for (const entry of entries) {
     for (const change of entry.changes ?? []) {
       if (change.field !== "messages") continue;
 
-      const value = change.value;
-      const messages = value?.messages ?? [];
+      const messages = change.value?.messages ?? [];
 
       for (const message of messages) {
-        if (message.type !== "text") {
-          console.log("Ignoring non-text WhatsApp message.");
-          continue;
-        }
+        if (message.type !== "text") continue;
 
-        console.log("Incoming WhatsApp message:");
-        console.log("Sender:", message.from);
-        console.log("Message:", message.text?.body);
-        console.log("Message ID:", message.id);
+        const sender = message.from;
+        const text = message.text?.body;
+
+        if (!sender || !text) continue;
+
+        try {
+          const result = await processCustomerMessage(sender, text);
+
+          console.log("AI conversation processed:", {
+            sender,
+            reply: result.reply,
+            status: result.status,
+          });
+        } catch (error) {
+          console.error(
+            "Failed to process incoming WhatsApp message:",
+            error.message
+          );
+        }
       }
     }
   }
-
-  return res.status(200).send("OK");
 };
+
