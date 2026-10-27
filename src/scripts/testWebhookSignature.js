@@ -14,7 +14,7 @@ const payload = {
             messaging_product: "whatsapp",
             messages: [
               {
-                from: "TEST_SENDER",
+                from: "demo_001",
                 id: "wamid.TEST_MESSAGE",
                 timestamp: "1792230000",
                 type: "text",

@@ -1,4 +1,3 @@
-
 import processCustomerMessage from "../services/conversation.service.js";
 export const verifyWhatsAppWebhook = (req, res) => {
   const mode = req.query["hub.mode"];
@@ -16,8 +15,6 @@ export const verifyWhatsAppWebhook = (req, res) => {
   return res.sendStatus(403);
 };
 
-
-
 export const receiveWhatsAppWebhook = async (req, res) => {
   // Acknowledge the webhook before processing.
   res.status(200).send("OK");
@@ -34,12 +31,15 @@ export const receiveWhatsAppWebhook = async (req, res) => {
         if (message.type !== "text") continue;
 
         const sender = message.from;
+        const customerKey = sender.startsWith("demo_") 
+          ? sender
+          : sender;
         const text = message.text?.body;
 
         if (!sender || !text) continue;
 
         try {
-          const result = await processCustomerMessage(sender, text);
+          const result = await processCustomerMessage(customerKey, text);
 
           console.log("AI conversation processed:", {
             sender,
@@ -49,11 +49,10 @@ export const receiveWhatsAppWebhook = async (req, res) => {
         } catch (error) {
           console.error(
             "Failed to process incoming WhatsApp message:",
-            error.message
+            error.message,
           );
         }
       }
     }
   }
 };
-
