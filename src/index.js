@@ -6,8 +6,9 @@ import connectDB from "./config/db.js";
 connectDB()
 
 .then(()=>{
-    app.listen(process.env.PORT || 5050, ()=>{
-        console.log(`Server is running at port : ${process.env.PORT || 5050}`);
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, "0.0.0.0", ()=>{
+        console.log(`Server is running at port : ${PORT}`);
     });
 })
 .catch((error)=>{
