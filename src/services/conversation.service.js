@@ -80,7 +80,18 @@ const processCustomerMessage = async (customerId, message) => {
 
   await lead.save();
 
-  // Simulate sending the AI reply to the customer
+  console.log("\n========== AI SALES BUDDY LEAD ANALYSIS ==========");
+  console.log(`Customer: ${customer.name}`);
+  console.log(`Phone: ${customer.phone}`);
+  console.log(`Interest: ${lead.interest}`);
+  console.log(`Intent: ${lead.intent}`);
+  console.log(`Lead Score: ${lead.score}/100`);
+  console.log(`Lead Status: ${lead.status}`);
+  console.log(`Human Handoff: ${lead.needsHuman ? "YES" : "NO"}`);
+  console.log(`AI Reply: ${analysis.reply}`);
+  console.log("==================================================\n");
+
+  // Send the AI-generated reply to the customer
   const whatsappResult = await sendWhatsAppMessage(
     customer.phone,
     analysis.reply,
