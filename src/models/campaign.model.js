@@ -10,7 +10,7 @@ const recipientSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["PENDING", "SIMULATED", "FAILED"],
+      enum: ["PENDING", "SIMULATED", "ACCEPTED", "FAILED"],
       default: "PENDING",
     },
     messageId: {
@@ -37,7 +37,7 @@ const campaignSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["RUNNING", "COMPLETED", "FAILED"],
+      enum: ["RUNNING", "COMPLETED", "ACCEPTED", "FAILED"],
       default: "RUNNING",
     },
     recipients: {
