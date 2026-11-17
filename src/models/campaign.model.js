@@ -37,7 +37,7 @@ const campaignSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["RUNNING", "COMPLETED", "ACCEPTED", "FAILED"],
+      enum: ["RUNNING", "COMPLETED",  "PARTIAL", "FAILED"],
       default: "RUNNING",
     },
     recipients: {
