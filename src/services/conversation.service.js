@@ -82,6 +82,7 @@ const processCustomerMessage = async (customerId, message) => {
 
   console.log("\n========== AI SALES BUDDY LEAD ANALYSIS ==========");
   console.log(`Customer: ${customer.name}`);
+  console.log(`Customer Reply: ${message}`);
   console.log(`Phone: ${customer.phone}`);
   console.log(`Interest: ${lead.interest}`);
   console.log(`Intent: ${lead.intent}`);
